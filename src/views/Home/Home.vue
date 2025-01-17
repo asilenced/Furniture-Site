@@ -32,6 +32,44 @@
     </div>
   </section>
 
+  <section class="mt-5">
+    <div class="container mx-auto p-5">
+      <div class="flex justify-between items-center mb-5">
+        <h1 class="text-[24px] text-[#3B3B98] font-semibold">
+          {{ $t("home.categories") }}
+        </h1>
+      </div>
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+      >
+        <div
+          v-for="category in categories"
+          :key="category.id"
+          @click="handleCategoryClick(category.id)"
+          class="cursor-pointer group"
+        >
+          <div
+            class="border rounded-lg p-4 flex flex-col items-center transition-all duration-300 hover:shadow-lg hover:border-[#3B3B98]"
+          >
+            <div class="w-full aspect-square mb-3 overflow-hidden rounded-lg">
+              <img
+                :src="category.image"
+                :alt="category.name"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="text-center text-gray-800 group-hover:text-[#3B3B98]">
+              {{ $t(`home.${category.name}`) }}
+            </h3>
+            <p class="text-sm text-gray-500 text-center mt-1">
+              {{ category.itemCount }} items
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="mt-5" id="ancient-furniture">
     <div class="container mx-auto p-5">
       <div class="hidden lg:block w-[100%]">
@@ -546,6 +584,51 @@ onUnmounted(() => {
 const modal = ref(false);
 const toggleModal = () => (modal.value = !modal.value);
 const token = computed(() => store.state.token);
+
+// Add categories data
+const categories = ref([
+  {
+    id: "Desk",
+    name: "desks",
+    image: "/static/img/LH235.webp",
+    itemCount: 10,
+  },
+  {
+    id: "Table",
+    name: "tables",
+    image: "/static/img/LH242.webp",
+    itemCount: 7,
+  },
+  {
+    id: "Chair",
+    name: "chairs",
+    image: "/static/img/LH245.webp",
+    itemCount: 7,
+  },
+  {
+    id: "Wardrobe",
+    name: "wardrobes",
+    image: "/static/img/LH262.webp",
+    itemCount: 6,
+  },
+  {
+    id: "FileBox",
+    name: "fileboxes",
+    image: "/static/img/LH265.webp",
+    itemCount: 5,
+  },
+]);
+
+const handleCategoryClick = (categoryId) => {
+  // Navigate to catalog and dispatch the event
+  router.push(`/catalog?category=${categoryId}`);
+  // Dispatch a custom event to update the category
+  window.dispatchEvent(
+    new CustomEvent("updateCategory", {
+      detail: { category: categoryId },
+    })
+  );
+};
 </script>
 <style lang="css" scoped>
 .first_bg {
